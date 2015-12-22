@@ -1,11 +1,10 @@
-# Node API Starter #
+# QuadLogs #
 
-## Getting Started ##
+## What is it? ##
 
-* run ```npm install```
-* add config directory with DB path and credentials
-* start adding tests to the test folder
+QuadLogs is a service that is responsible for logging quadcopter flights. It should be responsible for holding the
+data associated with the flight.
 
-## Features ##
+## Docs ##
 
-* Designed as a beginning for any Node.js API that needs authentication
+* [Flight Model](https://github.com/sdmichelini/QuadLogger/tree/master/models)
