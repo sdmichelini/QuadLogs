@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var api = require('./api/lib/routes');
+var api = require('./api/routes');
 
 if(featureToggles.isFeatureEnabled('api')){
   app.use('/api',api);

@@ -1,6 +1,6 @@
 var errors = require('./errors');
 var jwt = require('jsonwebtoken');
-var config = require('../../config/auth');
+var config = require('../config/auth');
 
 //This function will check that a users scopes 'authorized_scope' contains 'scopes'
 //scopes is scopes that are allowed to access resource
