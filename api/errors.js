@@ -27,3 +27,10 @@ var itemNotFound = exports.itemNotFound = function(res){
   });
   res.end();
 }
+
+var methodNotAllowed = exports.methodNotAllowed = function(res){
+  res.status(405).json({
+    message:'Error: Method Not Allowed'
+  });
+  res.end();
+}

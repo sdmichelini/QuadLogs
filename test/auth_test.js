@@ -64,10 +64,27 @@ describe('Auth Tests', function(){
       request.post(baseUrl + '/local').type('form').send({ email:'test@test.com', password:'password123' }).end(function assert(err, res){
         //Unauthorized
         expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('token');
         done();
       });
     });
 
+  });
+  describe('When performing a GET or a PUT on /local', function(){
+    it('should return method not allowed', function(done){
+      request.put(baseUrl + '/local').end(function assert(err, res){
+        //Unauthorized
+        expect(res.status).to.equal(405);
+        done();
+      });
+    });
+    it('should return method not allowed', function(done){
+      request.get(baseUrl + '/local').end(function assert(err, res){
+        //Unauthorized
+        expect(res.status).to.equal(405);
+        done();
+      });
+    });
   });
 });
 

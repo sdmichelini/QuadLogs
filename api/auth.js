@@ -3,10 +3,28 @@ var express = require('express');
 var utils = require('./utils');
 var error = require('./errors');
 
+var jwt = require('jsonwebtoken');
+
 //DB Connection
 var model = require("../model/User");
 
+var config = require('../config/auth');
+
 var router = express.Router();
+
+//Send a User
+//Param is MongoDB User Model
+function sendUser(res, user){
+  var token = jwt.sign({
+    user: user.local.email,
+    scopes: user.scopes
+  }, config.jwtToken, {
+        expiresIn: 1440 // expires in 24 hours
+  });
+  res.status(200).json({
+    token: token
+  });
+}
 
 //Local Auth
 
@@ -19,7 +37,7 @@ router.post('/local', function(req,res){
         error.unauthorizedError(res);
       }else{
         if(user.validPassword(req.body.password)){
-          res.status(200).json({message: 'sucess'});
+          sendUser(res, user);
         }else{
           error.unauthorizedError(res);
         }
@@ -27,6 +45,16 @@ router.post('/local', function(req,res){
     });
 
   }
+});
+
+//Not Allowed GET, PUT
+
+router.get('/local',function(req, res){
+  error.methodNotAllowed(res);
+});
+
+router.put('/local',function(req, res){
+  error.methodNotAllowed(res);
 });
 
 module.exports = router;
