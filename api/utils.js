@@ -1,6 +1,5 @@
 var errors = require('./errors');
 var jwt = require('jsonwebtoken');
-var config = require('../config/auth');
 
 //This function will check that a users scopes 'authorized_scope' contains 'scopes'
 //scopes is scopes that are allowed to access resource
@@ -25,7 +24,7 @@ var CheckScopesMiddleware = exports.CheckScopesMiddleware = function(authorized_
   return function(req, res, next){
     var token = req.body.access_token || req.query.access_token;
     if(token){
-      jwt.verify(token, config.jwtToken, function(err, decoded){
+      jwt.verify(token, process.env.JWT_SECRET_KEY , function(err, decoded){
         if(err){
           errors.unauthorizedError(res);
         }else{

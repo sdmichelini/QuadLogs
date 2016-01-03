@@ -8,8 +8,6 @@ var jwt = require('jsonwebtoken');
 //DB Connection
 var model = require("../model/User");
 
-var config = require('../config/auth');
-
 var router = express.Router();
 
 //Send a User
@@ -18,7 +16,7 @@ function sendUser(res, user){
   var token = jwt.sign({
     user: user.local.email,
     scopes: user.scopes
-  }, config.jwtToken, {
+  }, process.env.JWT_SECRET_KEY , {
         expiresIn: 1440 // expires in 24 hours
   });
   res.status(200).json({
