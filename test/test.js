@@ -13,4 +13,5 @@ describe('API Test', function(){
   });
 
   require('./auth_test');
+  require('./flight.test')
 });
