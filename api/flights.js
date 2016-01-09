@@ -30,7 +30,7 @@ router.get('/', function(req, res){
   });
 });
 
-router.post('/', function(req,res){
+router.post('/', utils.CheckScopesMiddleware(['admin']),function(req,res){
   if(!req.body.duration){
     error.invalidRequest(res);
   }else if(isNaN(Number(req.body.duration))){

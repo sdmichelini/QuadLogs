@@ -5,6 +5,8 @@ var model = require("../model/Flight");
 
 var baseUrl = 'http://localhost:8080/api/flights';
 
+var jwt = require('jsonwebtoken');
+
 describe('Flight Model Tests', function(){
   describe('When Requesting Flight List w/ No Parameters', function(){
     it('should return a list of flights and display no more than 10', function(done){
@@ -65,6 +67,12 @@ describe('Flight Model Tests', function(){
     });
   });
   describe('When Creating Flights', function(){
+    var token = jwt.sign({
+      user: 'test@gmail.com',
+      scopes: ['admin']
+    }, process.env.JWT_SECRET_KEY , {
+          expiresIn: 1440 // expires in 24 hours
+    });
     before(function(done){
       model.remove({}, function(err, removed){
         done(err);
@@ -72,7 +80,7 @@ describe('Flight Model Tests', function(){
     });
     it('should allow a flight to be added', function(done){
       var date = Date.now();
-      request.post(baseUrl).type('form').send({duration:10, date: date}).end(function assert(err, res){
+      request.post(baseUrl).type('form').send({duration:10, date: date, access_token: token}).end(function assert(err, res){
         expect(err).to.not.be.ok;
         expect(res.status).to.equal(201);
         expect(res.body).to.have.property('date');
@@ -83,14 +91,20 @@ describe('Flight Model Tests', function(){
       });
     });
     it('should not allow a bad request', function(done){
-      request.post(baseUrl).type('form').send({date: Date.now()}).end(function assert(err, res){
+      request.post(baseUrl).type('form').send({date: Date.now(), access_token: token}).end(function assert(err, res){
         expect(res.status).to.equal(400);
         done();
       });
     });
     it('should not allow a non-number duration', function(done){
-      request.post(baseUrl).type('form').send({duration: 'my bad duration'}).end(function assert(err, res){
+      request.post(baseUrl).type('form').send({duration: 'my bad duration', access_token: token}).end(function assert(err, res){
         expect(res.status).to.equal(400);
+        done();
+      });
+    });
+    it('should not allow unauthorized users', function(done){
+      request.post(baseUrl).type('form').send({duration: 'my bad duration'}).end(function assert(err, res){
+        expect(res.status).to.equal(401);
         done();
       });
     });
